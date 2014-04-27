@@ -16,28 +16,26 @@ Plugin 'tpope/vim-surround'
 "exuberant ctags needed
 Plugin 'majutsushi/tagbar'
 Plugin 'Lokaltog/vim-distinguished'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'goatslacker/mango.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'digitaltoad/vim-jade'
 Plugin 'wavded/vim-stylus'
 Plugin 'scrooloose/syntastic'
-Plugin 'moll/vim-node'
-Plugin 'burnettk/vim-angular'
 Plugin 'bling/vim-airline'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'jelera/vim-javascript-syntax'
 Plugin 'terryma/vim-multiple-cursors'
 "npm install
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'mbbill/undotree'
 Plugin 'kien/ctrlp.vim'
-"npm js-beaufity needed
-Plugin 'einars/js-beautify'
+Plugin 'pangloss/vim-javascript'
 Plugin 'maksimr/vim-jsbeautify'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'moll/vim-node'
+Plugin 'burnettk/vim-angular'
 
 Plugin 'tpope/vim-speeddating'
 
@@ -49,8 +47,6 @@ Plugin 'Shougo/neosnippet-snippets'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neocomplete.vim'
 
-Plugin 'othree/javascript-libraries-syntax.vim'
-"Plugin 'mhinz/vim-startify'
 "Plugin 'ahayman/vim-nodejs-complete'
 Plugin 'briancollins/vim-jst'
 Plugin 'elzr/vim-json'
@@ -74,9 +70,12 @@ Plugin 'bling/vim-bufferline'
 
 Plugin 'L9'
 Plugin 'FuzzyFinder'
-" scripts not on GitHub
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
+
+
+Plugin 'flazz/vim-colorschemes'
+Plugin 'goatslacker/mango.vim'
+Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'chriskempson/base16-vim'
 " ...
 " Get that filetype stuff happening
 call vundle#end()
@@ -119,13 +118,14 @@ set shiftwidth=4 " shift tab width
 set expandtab
 set timeoutlen=600 " timeout for shortcuts
 set hidden
-set history=50
+set history=1000
+set number
 
 " Add ignorance of whitespace to diff
 set diffopt+=iwhite
 """"""""""""""""""""
-set nu
 
+"gx opens stuff in browser, in my case, nightly
 let g:netrw_browsex_viewer = 'firefox-trunk'
 let g:nodejs_complete_config = {
 			\  'max_node_compl_len': 15
@@ -140,13 +140,29 @@ set guicursor+=sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 
 """"""""""""""""""""
 
+nnoremap <leader>c :VimShell -split<cr>
+nnoremap <leader>cn :VimShellInteractive node<cr>
+nnoremap <leader>cp :VimShellInteractive python<cr>
+
+"beutify
+nnoremap <leader>fjs :call JsBeautify()<cr>
+
 " easy switching buffers in normal mode
 nmap <A-PageDown> :bn<CR>
 nmap <A-PageUp> :bp<CR>
-map <F4> vawp:norm i <CR>
+"paste screws up many things, enable onyl when pasting
+nnoremap <F1> :Startify<cr>
+      let g:startify_session_dir = '~/.vim/.cache/sessions'
+      let g:startify_change_to_vcs_root = 1
+      let g:startify_show_sessions = 1
+nnoremap <F2> :set invpaste paste?<CR>
+    set pastetoggle=<F2>
+    set showmode
+map <F4> viwp <CR>
 map <F5> <Leader>yw<c-w>h<Leader>pw 
 map <F6> :TagbarToggle<CR>
 map <F7> :NERDTreeToggle<CR>
+"highlight is annoying 
 map <F8> :noh<CR>
 " make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -155,6 +171,10 @@ nmap <silent> <C-k> <C-W><C-k>
 nmap <silent> <C-j> <C-W><C-j>
 nmap <silent> <C-h> <C-W><C-h>
 nmap <silent> <C-l> <C-W><C-l>
+
+ " reselect visual block after indent
+vnoremap < <gv
+vnoremap > >gv
 
 " vertical paragraph-movement
 nmap <C-K> {
@@ -180,6 +200,7 @@ let g:neosnippet#enable_snipmate_compatibility=1
 let g:neocomplete#enable_at_startup=1
 let g:neocomplete#data_directory='~/.vim/.cache/neocomplete'
 
+"compiling less files with ,m
 nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
 
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? "\<C-n>" : "\<TAB>")
@@ -201,8 +222,20 @@ if filereadable(glob("~/.vimrc.local"))
 	    source ~/.vimrc.local
 endif
 
+"automatically load vimrc changes
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
+
+"integrating bufferline to airline
+let g:bufferline_echo = 0
+autocmd VimEnter *
+  \ let &statusline='%{bufferline#refresh_status()}'
+    \ .bufferline#get_status_string()
+
 set background=dark     " you can use `dark` or `light` as your background
-"neverness, molokai, mango, solarized-tomorrow, xoria256
+"neverness, molokai, mango, solarized-tomorrow, xoria256, dante
 color jellybeans
 set guifont=Droid\ Sans\ Mono
 "transparent terminal

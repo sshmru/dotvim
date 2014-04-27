@@ -40,6 +40,8 @@ Plugin 'einars/js-beautify'
 Plugin 'maksimr/vim-jsbeautify'
 
 Plugin 'tpope/vim-speeddating'
+
+Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-repeat'
 
 Plugin 'honza/vim-snippets'
@@ -157,12 +159,13 @@ nmap <silent> <C-l> <C-W><C-l>
 " vertical paragraph-movement
 nmap <C-K> {
 nmap <C-J> }
-"Bubble single lines
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-"Bubble multiple lines
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
+
+" Bubble single lines
+nmap <C-Up> [e
+nmap <C-Down> ]e
+" Bubble multiple lines
+vmap <C-Up> [egv
+vmap <C-Down> ]egv
 
 """"""""""""""""""""
 "let g:EasyMotion_leader_key = '<Leader>'

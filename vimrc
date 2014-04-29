@@ -11,72 +11,74 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/vundle'
 """"""""""""""""""""
+Plugin 'L9'
+Plugin 'FuzzyFinder'
 
-Plugin 'tpope/vim-surround'
-"exuberant ctags needed
-Plugin 'majutsushi/tagbar'
-Plugin 'Lokaltog/vim-distinguished'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'goatslacker/mango.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'wavded/vim-stylus'
-Plugin 'scrooloose/syntastic'
-Plugin 'moll/vim-node'
-Plugin 'burnettk/vim-angular'
-Plugin 'bling/vim-airline'
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'terryma/vim-multiple-cursors'
-"npm install
-Plugin 'marijnh/tern_for_vim'
 Plugin 'mhinz/vim-startify'
-Plugin 'mbbill/undotree'
-Plugin 'kien/ctrlp.vim'
-"npm js-beaufity needed
-Plugin 'einars/js-beautify'
-Plugin 'maksimr/vim-jsbeautify'
-
-Plugin 'tpope/vim-speeddating'
-
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-repeat'
-
-Plugin 'honza/vim-snippets'
-Plugin 'Shougo/neosnippet-snippets'
-Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neocomplete.vim'
-
-Plugin 'othree/javascript-libraries-syntax.vim'
-"Plugin 'mhinz/vim-startify'
-"Plugin 'ahayman/vim-nodejs-complete'
-Plugin 'briancollins/vim-jst'
-Plugin 'elzr/vim-json'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'amirh/HTML-AutoCloseTag'
-Plugin 'tpope/vim-markdown'
-Plugin 'Raimondi/delimitMate'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'myusuf3/numbers.vim'
-Plugin 'wesQ3/vim-windowswap'
-Plugin 'groenewege/vim-less'
-Plugin 'tristen/vim-sparkup'
-
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/syntastic'
 "need 2 MAKE inside of vimproc
 Plugin  'Shougo/vimproc.vim'
 Plugin  'shougo/vimshell'
 
 
+Plugin 'tpope/vim-surround'
+Plugin 'Lokaltog/vim-easymotion'
+"exuberant ctags needed
+Plugin 'majutsushi/tagbar'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'terryma/vim-multiple-cursors'
+"npm install
+Plugin 'mbbill/undotree'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-speeddating'
+
+Plugin 'bling/vim-airline'
 Plugin 'bling/vim-bufferline'
 
+"matching quotes n braces
+Plugin 'Raimondi/delimitMate'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'myusuf3/numbers.vim'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-endwise'
+Plugin 'coderifous/textobj-word-column.vim'
+Plugin 'godlygeek/tabular'
 
-Plugin 'L9'
-Plugin 'FuzzyFinder'
-" scripts not on GitHub
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
+Plugin 'marijnh/tern_for_vim'
+Plugin 'honza/vim-snippets'
+Plugin 'Shougo/neosnippet-snippets'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neocomplete.vim'
+
+"Plugin 'ahayman/vim-nodejs-complete'
+Plugin 'pangloss/vim-javascript'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'moll/vim-node'
+Plugin 'burnettk/vim-angular'
+Plugin 'briancollins/vim-jst'
+Plugin 'elzr/vim-json'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'amirh/HTML-AutoCloseTag'
+Plugin 'gorodinskiy/vim-coloresque'
+Plugin 'tpope/vim-markdown'
+Plugin 'wesQ3/vim-windowswap'
+Plugin 'wavded/vim-stylus'
+Plugin 'groenewege/vim-less'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'tristen/vim-sparkup'
+
+
+
+Plugin 'Lokaltog/vim-distinguished'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'goatslacker/mango.vim'
+Plugin 'chriskempson/vim-tomorrow-theme'
+Plugin 'chriskempson/base16-vim'
 " ...
 " Get that filetype stuff happening
 call vundle#end()
@@ -95,6 +97,7 @@ set wildmenu " show options for <tab>
 set ruler " show the cursor position all the time
 set showcmd " show (partial) command in status line
 set showmatch " show matching brackets
+set matchpairs+=<:> " make < and > match
 set ignorecase " case insensitive matching
 set smartcase " case sensitive matching on mixed case
 set incsearch " incremental search
@@ -107,7 +110,6 @@ set updatetime=300 " mostly for tagbar
 set nowrap " wrapping is usually evil
 set exrc " allow current directory .vimrc overrides
 syntax on " syntax highlighting
-let mapleader="," " start shortcuts with coma
 """"""""""""""""""""
 set backspace=indent,eol,start " more powerful backspacing
 set autoindent " always set autoindenting on
@@ -119,13 +121,21 @@ set shiftwidth=4 " shift tab width
 set expandtab
 set timeoutlen=600 " timeout for shortcuts
 set hidden
-set history=50
+set history=1000
+set number
+set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+"set list
+
+
+if has("gui_running") " GUI mode
+  set guioptions-=T " remove useless toolbar
+endif
 
 " Add ignorance of whitespace to diff
 set diffopt+=iwhite
 """"""""""""""""""""
-set nu
 
+"gx opens stuff in browser, in my case, nightly
 let g:netrw_browsex_viewer = 'firefox-trunk'
 let g:nodejs_complete_config = {
 			\  'max_node_compl_len': 15
@@ -140,29 +150,97 @@ set guicursor+=sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 
 """"""""""""""""""""
 
+let mapleader="," " start shortcuts with coma
+
+
+nnoremap <leader>ss :VimShell -split<cr>
+nnoremap <leader>sn :VimShellInteractive node<cr>
+nnoremap <leader>sp :VimShellInteractive python<cr>
+"autocmd FileType python nnoremap <leader>cx :VimShell python %<cr>
+
+"compiling less files with ,m
+nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
+
+"beutify
+nnoremap <leader>fjs :call JsBeautify()<cr>
+
 " easy switching buffers in normal mode
 nmap <A-PageDown> :bn<CR>
 nmap <A-PageUp> :bp<CR>
-map <F4> vawp:norm i <CR>
-map <F5> <Leader>yw<c-w>h<Leader>pw 
+
+"escape is too far to reach
+inoremap ;; <ESC>`^
+
+"normal mode insert line
+nnoremap <CR> I<CR><Esc>k
+
+" Fast saving
+nmap <leader>. :w!<cr>
+nmap <leader>.<leader> :wq!<cr>
+
+
+nnoremap <F1> :Startify<cr>
+      let g:startify_session_dir = '~/.vim/.cache/sessions'
+      let g:startify_change_to_vcs_root = 1
+      let g:startify_show_sessions = 1
+"paste screws up many things, enable onyl when pasting
+nnoremap <F2> :set invpaste paste?<CR>
+    set pastetoggle=<F2>
+    set showmode
+
+map <F4> viwp <CR>
+
 map <F6> :TagbarToggle<CR>
 map <F7> :NERDTreeToggle<CR>
+"highlight is annoying 
 map <F8> :noh<CR>
+
 " make Y consistent with C and D. See :help Y.
 nnoremap Y y$
+
+" yank/paste to/from the OS clipboard
+noremap <silent> <leader>y "+y
+noremap <silent> <leader>Y "+Y
+noremap <silent> <leader>p "+p
+noremap <silent> <leader>P "+P
 
 nmap <silent> <C-k> <C-W><C-k>
 nmap <silent> <C-j> <C-W><C-j>
 nmap <silent> <C-h> <C-W><C-h>
 nmap <silent> <C-l> <C-W><C-l>
 
-" vertical paragraph-movement
-nmap <C-K> {
-nmap <C-J> }
+" window resizing
+nmap <S-Left> <C-w><
+nmap <S-Down> <C-w>-
+nmap <S-Up> <C-w>+
+nmap <S-Right> <C-w>>
 
+let g:windowswap_map_keys = 0 "prevent default bindings
+nnoremap <silent> <leader>wy :call WindowSwap#MarkWindowSwap()<CR>
+nnoremap <silent> <leader>wp :call WindowSwap#DoWindowSwap()<CR>
+nmap <leader>ww <Leader>wy<c-w>h<Leader>wp 
+
+" remap U to <C-r> for easier redo
+nnoremap U <C-r>
+
+" select what was just pasted
+nnoremap <leader>v V`]
+
+"split lines 
+nnoremap S ha<CR><Esc>k$
+
+" allow the . to execute once for each line of a visual selection + reselect
+vnoremap . :normal .<CR>gv
+
+" reselect visual block after indent
+vnoremap < <gv
+vnoremap > >gv
+
+"unimpaired plugin
 " Bubble single lines
 nmap <C-Up> [e
 nmap <C-Down> ]e
+
 " Bubble multiple lines
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
@@ -179,8 +257,8 @@ let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/
 let g:neosnippet#enable_snipmate_compatibility=1
 let g:neocomplete#enable_at_startup=1
 let g:neocomplete#data_directory='~/.vim/.cache/neocomplete'
+let g:neocomplete#enable_smart_case = 1
 
-nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
 
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? "\<C-n>" : "\<TAB>")
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
@@ -191,6 +269,7 @@ autocmd FileType css,styl,stylus setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown,jade setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType html,less,jade,css setlocal ts=2 sts=2 sw=2
 
 
 "annoying swap files
@@ -201,11 +280,24 @@ if filereadable(glob("~/.vimrc.local"))
 	    source ~/.vimrc.local
 endif
 
+"automatically load vimrc changes
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
+
+
+"integrating bufferline to airline
+let g:bufferline_echo = 0
+autocmd VimEnter *
+  \ let &statusline='%{bufferline#refresh_status()}'
+    \ .bufferline#get_status_string()
+
 set background=dark     " you can use `dark` or `light` as your background
-"neverness, molokai, mango, solarized-tomorrow, xoria256
+"neverness, molokai, mango, solarized-tomorrow, xoria256, dante
 color jellybeans
 set guifont=Droid\ Sans\ Mono
 "transparent terminal
 hi Normal ctermbg=NONE
 "empty space transparent
-hi NonText ctermfg=250 ctermbg=none
+hi NonText ctermfg=250 ctermbg=none 

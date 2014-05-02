@@ -53,7 +53,7 @@ Plugin 'Shougo/neosnippet-snippets'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neocomplete.vim'
 
-"Plugin 'ahayman/vim-nodejs-complete'
+Plugin 'ahayman/vim-nodejs-complete'
 Plugin 'pangloss/vim-javascript'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'jelera/vim-javascript-syntax'
@@ -110,7 +110,7 @@ set updatetime=300 " mostly for tagbar
 set nowrap " wrapping is usually evil
 set exrc " allow current directory .vimrc overrides
 syntax on " syntax highlighting
-""""""""""""""""""""
+let g:clipbrdDefaultReg = '+'
 set backspace=indent,eol,start " more powerful backspacing
 set autoindent " always set autoindenting on
 set smartindent " try to guess indentation
@@ -119,16 +119,18 @@ set tabstop=4 " show tabs as 4 spaces
 set softtabstop=4 " show tabs as 4 spaces
 set shiftwidth=4 " shift tab width
 set expandtab
-set timeoutlen=600 " timeout for shortcuts
+set timeoutlen=500 " timeout for shortcuts
 set hidden
 set history=1000
 set number
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 "set list
+set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+""""""""""""""""""""
 
 
 if has("gui_running") " GUI mode
-  set guioptions-=T " remove useless toolbar
+    set guioptions-=T " remove useless toolbar
+    set guifont=Droid\ Sans\ Mono
 endif
 
 " Add ignorance of whitespace to diff
@@ -151,7 +153,7 @@ set guicursor+=sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
 """"""""""""""""""""
 
 let mapleader="," " start shortcuts with coma
-
+map <Space> :
 
 nnoremap <leader>ss :VimShell -split<cr>
 nnoremap <leader>sn :VimShellInteractive node<cr>
@@ -172,11 +174,15 @@ nmap <A-PageUp> :bp<CR>
 inoremap ;; <ESC>`^
 
 "normal mode insert line
-nnoremap <CR> I<CR><Esc>k
+nnoremap <CR> i<CR><Esc>k
 
-" Fast saving
+" Fast savig
 nmap <leader>. :w!<cr>
-nmap <leader>.<leader> :wq!<cr>
+" sudo save
+nmap <leader>.. :w !sudo tee > /dev/null %
+nmap <leader>./ :wq!<cr>
+nmap <leader>/ :q<cr>
+nmap <leader>// :q!<cr>
 
 
 nnoremap <F1> :Startify<cr>
@@ -193,7 +199,7 @@ map <F4> viwp <CR>
 map <F6> :TagbarToggle<CR>
 map <F7> :NERDTreeToggle<CR>
 "highlight is annoying 
-map <F8> :noh<CR>
+map <F8> :noh<CR>:redraw!<CR>
 
 " make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -204,6 +210,7 @@ noremap <silent> <leader>Y "+Y
 noremap <silent> <leader>p "+p
 noremap <silent> <leader>P "+P
 
+"window movement
 nmap <silent> <C-k> <C-W><C-k>
 nmap <silent> <C-j> <C-W><C-j>
 nmap <silent> <C-h> <C-W><C-h>
@@ -292,12 +299,23 @@ let g:bufferline_echo = 0
 autocmd VimEnter *
   \ let &statusline='%{bufferline#refresh_status()}'
     \ .bufferline#get_status_string()
-
 set background=dark     " you can use `dark` or `light` as your background
-"neverness, molokai, mango, solarized-tomorrow, xoria256, dante
-color jellybeans
-set guifont=Droid\ Sans\ Mono
+"neverness, molokai, mango, solarized-tomorrow, xoria256, dante, distinguished
+
+"neat highlighting all occurrences of word under cursor
+au! CursorMoved * set nohlsearch
+au! CursorHold * set hlsearch | let @/='\<'.expand("<cword>").'\>'
+set hlsearch
+
+"cursor line highlight
+set cul
+hi CursorLine term=none cterm=none ctermbg=234
+
+color jelleybeans
 "transparent terminal
 hi Normal ctermbg=NONE
 "empty space transparent
 hi NonText ctermfg=250 ctermbg=none 
+":runtime! syntax/2html.vim<CR>
+":TOhtml    generates html
+"vim http://adres.com/  get page html

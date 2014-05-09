@@ -9,7 +9,7 @@ call vundle#begin()
 "call vundle#rc(path)
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 """"""""""""""""""""
 Plugin 'L9'
 Plugin 'FuzzyFinder'
@@ -18,9 +18,9 @@ Plugin 'mhinz/vim-startify'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/syntastic'
 "need 2 MAKE inside of vimproc
-Plugin  'Shougo/vimproc.vim'
-Plugin  'shougo/vimshell'
-
+Plugin 'Shougo/vimproc.vim'
+Plugin 'shougo/vimshell'
+Plugin 'rking/ag.vim'
 
 Plugin 'tpope/vim-surround'
 Plugin 'Lokaltog/vim-easymotion'
@@ -39,7 +39,7 @@ Plugin 'bling/vim-bufferline'
 
 "matching quotes n braces
 Plugin 'Raimondi/delimitMate'
-Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'Yggdroot/indentLine'
 Plugin 'myusuf3/numbers.vim'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-repeat'
@@ -53,7 +53,9 @@ Plugin 'Shougo/neosnippet-snippets'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neocomplete.vim'
 
-Plugin 'ahayman/vim-nodejs-complete'
+"somewhat buggy
+"Plugin 'ahayman/vim-nodejs-complete'
+Plugin 'Shutnik/jshint2.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'maksimr/vim-jsbeautify'
 Plugin 'jelera/vim-javascript-syntax'
@@ -72,8 +74,12 @@ Plugin 'groenewege/vim-less'
 Plugin 'digitaltoad/vim-jade'
 Plugin 'tristen/vim-sparkup'
 
+Plugin 'klen/python-mode'
+"screws unimpaired
+"Plugin 'python.vim'
 
 
+Plugin 'sjl/badwolf'
 Plugin 'Lokaltog/vim-distinguished'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'goatslacker/mango.vim'
@@ -140,8 +146,8 @@ set diffopt+=iwhite
 "gx opens stuff in browser, in my case, nightly
 let g:netrw_browsex_viewer = 'firefox-trunk'
 let g:nodejs_complete_config = {
-			\  'max_node_compl_len': 15
-			\}
+    \  'max_node_compl_len': 15
+    \}
 
 set guicursor=n-v-c:block-Cursor-blinkon0
 set guicursor+=ve:ver35-Cursor
@@ -160,11 +166,15 @@ nnoremap <leader>sn :VimShellInteractive node<cr>
 nnoremap <leader>sp :VimShellInteractive python<cr>
 "autocmd FileType python nnoremap <leader>cx :VimShell python %<cr>
 
-"compiling less files with ,m
-nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
+"compiling files with leader m depending on filetype
+autocmd FileType less nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
+
+autocmd FileType javascript nnoremap <Leader>m :JSHint<CR>
 
 "beutify
-nnoremap <leader>fjs :call JsBeautify()<cr>
+nnoremap <leader>fj :call JsBeautify()<cr>
+nnoremap <leader>fh :call HtmlBeautify()<cr>
+nnoremap <leader>fc :call CSSBeautify()<cr>
 
 " easy switching buffers in normal mode
 nmap <A-PageDown> :bn<CR>
@@ -176,23 +186,28 @@ inoremap ;; <ESC>`^
 "normal mode insert line
 nnoremap <CR> i<CR><Esc>k
 
-" Fast savig
-nmap <leader>. :w!<cr>
 " sudo save
 nmap <leader>.. :w !sudo tee > /dev/null %
+" Fast savig
+nmap <leader>. :w!<cr>
 nmap <leader>./ :wq!<cr>
 nmap <leader>/ :q<cr>
 nmap <leader>// :q!<cr>
+nmap <leader>.<leader> :wa<cr>
+nmap <leader>/<leader> :qa<cr>
+nmap <leader>//<leader> :qa!<cr>
 
+"deleting buffer without removing window split
+nmap <silent> <leader>bd :bp\|bd #<CR>
 
 nnoremap <F1> :Startify<cr>
-      let g:startify_session_dir = '~/.vim/.cache/sessions'
-      let g:startify_change_to_vcs_root = 1
-      let g:startify_show_sessions = 1
+let g:startify_session_dir = '~/.vim/.cache/sessions'
+let g:startify_change_to_vcs_root = 1
+let g:startify_show_sessions = 1
 "paste screws up many things, enable onyl when pasting
 nnoremap <F2> :set invpaste paste?<CR>
-    set pastetoggle=<F2>
-    set showmode
+set pastetoggle=<F2>
+set showmode
 
 map <F4> viwp <CR>
 
@@ -253,12 +268,6 @@ vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
 """"""""""""""""""""
-"let g:EasyMotion_leader_key = '<Leader>'
-let g:airline_theme='powerlineish'
-set laststatus=2
-
-let g:indent_guides_auto_colors = 0
-let g:indent_guides_enable_on_vim_startup = 1
 
 let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
 let g:neosnippet#enable_snipmate_compatibility=1
@@ -277,14 +286,26 @@ autocmd FileType html,markdown,jade setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType html,less,jade,css setlocal ts=2 sts=2 sw=2
+autocmd FileType html,jade,javascript let g:javascript_enable_domhtmlcss=1
 
+let g:startify_bookmarks = [
+    \ '~/.vimrc',
+    \ ]
+let g:startify_list_order = ['files', 'bookmarks', 'dir', 'sessions' ]
+
+set list lcs=tab:\|\
+let g:indentLine_color_term = 111
+let g:indentLine_color_gui = '#DADADA'
+let g:indentLine_char = 'c'
+"let g:indentLine_char = '∙▹¦'
+let g:indentLine_char = '∙'
 
 "annoying swap files
 set backupdir=~/.vim-swap
 set directory=~/.vim-swap
 
 if filereadable(glob("~/.vimrc.local"))
-	    source ~/.vimrc.local
+    source ~/.vimrc.local
 endif
 
 "automatically load vimrc changes
@@ -293,29 +314,45 @@ augroup myvimrc
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
 
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+"compare 2 original file
+if !exists(":DiffOrig")
+command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+    \ | wincmd p | diffthis
+endif
 
 "integrating bufferline to airline
 let g:bufferline_echo = 0
 autocmd VimEnter *
-  \ let &statusline='%{bufferline#refresh_status()}'
+    \ let &statusline='%{bufferline#refresh_status()}'
     \ .bufferline#get_status_string()
-set background=dark     " you can use `dark` or `light` as your background
-"neverness, molokai, mango, solarized-tomorrow, xoria256, dante, distinguished
 
-"neat highlighting all occurrences of word under cursor
-au! CursorMoved * set nohlsearch
-au! CursorHold * set hlsearch | let @/='\<'.expand("<cword>").'\>'
-set hlsearch
+
+"neat highlighting all occurrences of word under cursor, turn on by searchign anything
+"but overrids search, workaroudn would be saving current search to some register and redoing it on N
+"au! cursormoved * set nohlsearch
+"au! cursorhold * set hlsearch | let @/='\<'.expand("<cword>").'\>'
+"set hlsearch
+
+let g:airline_theme='badwolf'
+set laststatus=2
 
 "cursor line highlight
 set cul
-hi CursorLine term=none cterm=none ctermbg=234
+hi cursorline term=none cterm=none ctermbg=234
+set background=dark     " you can use `dark` or `light` as your background
+"neverness,badwolf, molokai, mango, solarized-tomorrow, xoria256, dante, distinguished
+color jellybeans
 
-color jelleybeans
 "transparent terminal
 hi Normal ctermbg=NONE
 "empty space transparent
 hi NonText ctermfg=250 ctermbg=none 
 ":runtime! syntax/2html.vim<CR>
-":TOhtml    generates html
 "vim http://adres.com/  get page html
+":TOhtml    generates html
